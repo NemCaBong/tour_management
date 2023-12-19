@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import sequelize from "./config/database";
 import dotnev from "dotenv";
+import Tour from "./models/tour.model";
 
 dotnev.config();
 
@@ -17,8 +18,19 @@ app.set("view engine", "pug");
 app.get("/", (req: Request, res: Response) => {
   res.send("Trang chủ");
 });
-app.get("/tours", (req: Request, res: Response) => {
-  res.render("client/pages/tours/index");
+app.get("/tours", async (req: Request, res: Response) => {
+  const tours = await Tour.findAll({
+    where: {
+      status: "active",
+      deleted: false,
+    },
+    raw: true,
+  });
+  console.log(tours);
+  res.render("client/pages/tours/index", {
+    pageTitle: "Danh sách tour",
+    tours: tours,
+  });
 });
 
 app.listen(port, () => {
