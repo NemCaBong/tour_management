@@ -6,4 +6,6 @@ const router: Router = Router();
 // [GET] /tours/:slugCategory
 router.get("/:slugCategory", controller.index);
 
+router.get("/detail/:slugTour", controller.detail);
+
 export const tourRoutes: Router = router;
