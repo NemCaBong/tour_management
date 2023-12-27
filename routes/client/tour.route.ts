@@ -3,7 +3,7 @@ import * as controller from "../../controllers/client/tour.controller";
 
 const router: Router = Router();
 
-// [GET] /tours
-router.get("/", controller.index);
+// [GET] /tours/:slugCategory
+router.get("/:slugCategory", controller.index);
 
 export const tourRoutes: Router = router;
