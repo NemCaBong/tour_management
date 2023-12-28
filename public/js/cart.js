@@ -1,24 +1,27 @@
-console.log("Đoạn code trong trang giỏ hàng");
+/**
+ * Vẽ ra danh sách tour
+ */
 
-// lấy data và in ra giao diện
-// bởi vì trong localStorage chỉ có quantiy và id thôi
+const drawCartTour = () => {
+  // lấy data và in ra giao diện
+  // bởi vì trong localStorage chỉ có quantiy và id thôi
 
-// options cho fetch
-const options = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-  // thêm method để gửi localStorage cart về.
-  method: "POST",
-  // phải để nó ở dạng JSON như thế này mới gửi tư FE qua BE
-  body: localStorage.getItem("cart"),
-};
+  // options cho fetch
+  const options = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // thêm method để gửi localStorage cart về.
+    method: "POST",
+    // phải để nó ở dạng JSON như thế này mới gửi tư FE qua BE
+    body: localStorage.getItem("cart"),
+  };
 
-fetch("http://localhost:3005/cart/list-cart-data", options)
-  .then((res) => res.json())
-  .then((data) => {
-    const htmlArray = data.tours.map((item, index) => {
-      return `
+  fetch("http://localhost:3005/cart/list-cart-data", options)
+    .then((res) => res.json())
+    .then((data) => {
+      const htmlArray = data.tours.map((item, index) => {
+        return `
       <tr>
         <td>${index + 1}</td>
         <td>
@@ -46,18 +49,41 @@ fetch("http://localhost:3005/cart/list-cart-data", options)
         </td>
       </tr>
     `;
+      });
+      const listTour = document.querySelector("[list-tour]");
+      // biến mảng thành chuỗi
+      listTour.innerHTML = htmlArray.join("");
+
+      // tính tổng đơn hàng
+      const totalPrice = data.tours.reduce(
+        (total, item) => total + item.total,
+        0
+      );
+      const totalPriceSpan = document.querySelector("[total-price]");
+      totalPriceSpan.innerHTML = totalPrice.toLocaleString();
+
+      // In ra giao diện xong thì có thể xóa tour
+      deleteItemInCart();
     });
-    const listTour = document.querySelector("[list-tour]");
-    // biến mảng thành chuỗi
-    listTour.innerHTML = htmlArray.join("");
+  // END lấy ra data và in ra giao diện
+};
 
-    // tính tổng đơn hàng
-    const totalPrice = data.tours.reduce(
-      (total, item) => total + item.total,
-      0
-    );
-    const totalPriceSpan = document.querySelector("[total-price]");
-    totalPriceSpan.innerHTML = totalPrice.toLocaleString();
+// Xóa tour trong giỏ hàng
+const deleteItemInCart = () => {
+  const listBtnDelete = document.querySelectorAll("[btn-delete]");
+  listBtnDelete.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tourId = btn.getAttribute("btn-delete");
+      let cart = JSON.parse(localStorage.getItem("cart"));
+
+      cart = cart.filter((tour) => tour.tourId != tourId);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      drawCartTour();
+    });
   });
+};
+// END xóa tour trong giỏ hàng
 
-// END lấy ra data và in ra giao diện
+// Lấy data in ra giao diện
+drawCartTour();
+// END
