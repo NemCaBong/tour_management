@@ -64,6 +64,8 @@ const drawCartTour = () => {
 
       // In ra giao diện xong thì có thể xóa tour
       deleteItemInCart();
+      // Update quantity
+      updateQuantityCart();
     });
   // END lấy ra data và in ra giao diện
 };
@@ -84,6 +86,25 @@ const deleteItemInCart = () => {
 };
 // END xóa tour trong giỏ hàng
 
-// Lấy data in ra giao diện
+const updateQuantityCart = () => {
+  const listQuantityInput = document.querySelectorAll(
+    "[list-tour] input[item-id]"
+  );
+  listQuantityInput.forEach((input) => {
+    input.addEventListener("change", () => {
+      const tourId = input.getAttribute("item-id");
+      const quantity = parseInt(input.value);
+
+      const cart = JSON.parse(localStorage.getItem("cart"));
+      const tourNeedUpdated = cart.find((item) => item.tourId == tourId);
+      // vì tourNeedUpdated là reference của cart => thay đổi nó
+      // chính là thay đổi cart
+      tourNeedUpdated.quantity = quantity;
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      // thay đổi xong thì vẽ lại giao diện
+      drawCartTour();
+    });
+  });
+};
 drawCartTour();
-// END
