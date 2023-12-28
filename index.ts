@@ -7,10 +7,13 @@ dotnev.config();
 const app: Express = express();
 const port: number | string = process.env.PORT || 3000;
 
+// Body Parser
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use(express.static(`public`));
 app.set("views", "./views");
 app.set("view engine", "pug");
-
 // App locals var
 app.locals.moment = moment;
 

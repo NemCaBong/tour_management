@@ -88,5 +88,4 @@ const showMiniCart = () => {
 
 // gọi khi mới load trang
 showMiniCart();
-
 // END minicart
