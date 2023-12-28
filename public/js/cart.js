@@ -108,3 +108,34 @@ const updateQuantityCart = () => {
   });
 };
 drawCartTour();
+
+// Đặt tour
+const formOrder = document.querySelector("[form-order]");
+if (formOrder) {
+  formOrder.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const fullName = e.target.elements.fullName.value;
+    const phone = e.target.elements.phone.value;
+    const note = e.target.elements.note.value;
+
+    const data = {
+      info: { fullName: fullName, phone: phone, note: note },
+      cart: JSON.parse(localStorage.getItem("cart")),
+    };
+
+    // Gửi data thông qua API về cho BE.
+    // và nhận về data từ phía BE.
+    fetch("/order", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+    console.log(data);
+  });
+}
+// END đặt tour
