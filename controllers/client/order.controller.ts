@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import Order from "../../models/order.model";
-import { or } from "sequelize";
+import Tour from "../../models/tour.model";
 import { generateOrderCode } from "../../helpers/generate";
+import OrderItem from "../../models/order-items.model";
 
 // [POST] /order
 export const index = async (req: Request, res: Response) => {
@@ -15,6 +16,7 @@ export const index = async (req: Request, res: Response) => {
     status: "initial",
   };
 
+  // Lưu data bảng Order
   const order = await Order.create(orderData);
   // lấy ra orderId để làm code.
   const orderId = order.dataValues.id;
@@ -31,7 +33,28 @@ export const index = async (req: Request, res: Response) => {
   );
   // hết tạo code
 
-  // code dùng để show ra thông tin đơn hàng
+  // Lưu data vào OrderItems
+  for (const item of data.cart) {
+    const dataForOrderItems = {
+      orderId: orderId,
+      tourId: item.tourId,
+      quantity: item.quantity,
+    };
+
+    const tour = await Tour.findOne({
+      where: {
+        id: item.tourId,
+        deleted: false,
+        status: "active",
+      },
+    });
+
+    dataForOrderItems["price"] = tour["price"];
+    dataForOrderItems["discount"] = tour["discount"];
+    dataForOrderItems["timeStart"] = tour["timeStart"];
+    // tạo mới
+    await OrderItem.create(dataForOrderItems);
+  }
 
   res.status(200).json({
     code: 200,
