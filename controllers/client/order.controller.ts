@@ -62,3 +62,50 @@ export const index = async (req: Request, res: Response) => {
     orderCode: code,
   });
 };
+
+//  [GET] /order/success
+export const success = async (req: Request, res: Response) => {
+  const orderCode = req.query.orderCode;
+  const orderInfo = await Order.findOne({
+    where: {
+      code: orderCode,
+      deleted: false,
+    },
+    raw: true,
+  });
+
+  // Tìm ra tất cả các mặt hàng trong order đó
+  const ordersItem = await OrderItem.findAll({
+    where: {
+      orderId: orderInfo["id"],
+    },
+    raw: true,
+  });
+
+  for (const item of ordersItem) {
+    item["price_special"] = item["price"] * (1 - item["discount"] / 100);
+    item["total"] = item["quantity"] * item["price_special"];
+
+    const tourInfo = await Tour.findOne({
+      where: {
+        id: item["tourId"],
+        deleted: false,
+      },
+      raw: true,
+    });
+
+    item["image"] = JSON.parse(tourInfo["images"])[0];
+    item["slug"] = tourInfo["slug"];
+  }
+
+  orderInfo["total_price"] = ordersItem.reduce(
+    (total, item) => total + item["total"],
+    0
+  );
+
+  res.render("client/pages/order/success.pug", {
+    pageTitle: "Đặt hàng thành công",
+    order: orderInfo,
+    ordersItem: ordersItem,
+  });
+};

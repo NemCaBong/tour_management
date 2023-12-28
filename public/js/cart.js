@@ -134,8 +134,16 @@ if (formOrder) {
       },
     })
       .then((res) => res.json())
-      .then((data) => console.log(data));
-    console.log(data);
+      .then((data) => {
+        if (data.code == 200) {
+          // xóa cart
+          localStorage.removeItem("cart");
+          // sang trang đặt hàng thành công theo order code
+          window.location.href = `/order/success?orderCode=${data.orderCode}`;
+        } else {
+          alert("Đặt hàng không thành công!");
+        }
+      });
   });
 }
 // END đặt tour
