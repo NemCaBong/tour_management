@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import Tour from "../../models/tour.model";
 
 // [GET] /admin/tours/
-
 export const index = async (req: Request, res: Response) => {
   // SELECT * FROM tours WHERE deleted = false;
 
@@ -24,9 +23,6 @@ export const index = async (req: Request, res: Response) => {
 
     item["price_special"] = item["price"] * (1 - item["discount"] / 100);
   });
-
-  console.log(tours);
-
   res.render("admin/pages/tours/index", {
     pageTitle: "Danh sách tour",
 
