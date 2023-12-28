@@ -26,6 +26,24 @@ if (!cart) {
   localStorage.setItem("cart", JSON.stringify([]));
 }
 
+// Alert Cart Success
+const alertAddToCartSuccess = () => {
+  const alertToast = document.querySelector("[alert-add-cart-success]");
+  // hiển thị
+  alertToast.classList.remove("alert-hidden");
+
+  // đóng vào
+  setTimeout(() => {
+    alertToast.classList.add("alert-hidden");
+  }, 3000);
+
+  const closeSpan = alertToast.querySelector("[close-alert]");
+  closeSpan.addEventListener("click", () => {
+    alertToast.classList.add("alert-hidden");
+  });
+};
+// END Alert Add Cart success
+
 // Thêm tour vào cart
 const formAddToCart = document.querySelector("[form-add-to-cart]");
 if (formAddToCart) {
@@ -50,6 +68,8 @@ if (formAddToCart) {
       }
 
       localStorage.setItem("cart", JSON.stringify(cart));
+      // Khi thêm vào giỏ thành công thì in thông báo
+      alertAddToCartSuccess();
     }
   });
 }
