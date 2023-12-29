@@ -19,7 +19,7 @@ app.set("view engine", "pug");
 
 // App locals var
 app.locals.moment = moment;
-app.locals.prefixAdmin = `/${systemConfig.prefixAdmin}`;
+app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
 // routes
 clientRoutes(app);
