@@ -6,6 +6,7 @@ block main
   form(
       action=`/${prefixAdmin}/tours/create`
       method="POST"
+      enctype="multipart/form-data"
     )
       div(class="form-group")
         label(for="title") Tiêu đề
@@ -27,6 +28,17 @@ block main
           option(value="" disabled selected) -- Chọn danh mục --
           each item in categories
             option(value=item.id) #{item.title}
+      
+      div(class="form-group")
+      label(for="images") Chọn nhiều ảnh
+      input(
+        type="file"
+        class="form-control-file"
+        id="images"
+        name="images"
+        accept="image/*"
+        multiple="multiple"
+      )
 
       div(class="form-group")
         label(for="price") Giá
@@ -68,6 +80,24 @@ block main
           value="0"
           min="0"
         )
+
+      div(class="form-group")
+        label(for="information") Thông tin tour
+        textarea(
+          class="form-control"
+          id="information"
+          name="information"
+          textarea-mce
+        )
+      div(class="form-group")
+        label(for="schedule") Lịch trình tour
+        textarea(
+          class="form-control"
+          id="schedule"
+          name="schedule"
+          textarea-mce
+        )
+
       div(class="form-group")
         label(for="position") Vị trí
         input(

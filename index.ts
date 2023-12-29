@@ -4,6 +4,7 @@ import clientRoutes from "./routes/client/index.route";
 import moment from "moment";
 import adminRoutes from "./routes/admin/index.route";
 import { systemConfig } from "./config/system";
+import path from "path";
 dotnev.config();
 
 const app: Express = express();
@@ -16,6 +17,13 @@ app.use(express.json());
 app.use(express.static(`public`));
 app.set("views", "./views");
 app.set("view engine", "pug");
+
+// TinyMCE
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
+// End TinyMCE
 
 // App locals var
 app.locals.moment = moment;

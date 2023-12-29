@@ -61,15 +61,19 @@ export const createPost = async (req: Request, res: Response) => {
     req.body.position = parseInt(req.body.position);
   }
 
+  // data lưu vào bảng Tour
   const dataTour = {
     title: req.body.title,
     code: code,
+    images: JSON.stringify(req.body.images),
     price: parseInt(req.body.price),
     discount: parseInt(req.body.discount),
     stock: parseInt(req.body.stock),
     timeStart: req.body.timeStart,
     position: req.body.position,
     status: req.body.status,
+    information: req.body.information,
+    schedule: req.body.schedule,
   };
 
   const tour = await Tour.create(dataTour);
